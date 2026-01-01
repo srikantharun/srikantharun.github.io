@@ -1,0 +1,7 @@
+title: Srikantharun's Engineering Blog
+description: Technical deep-dives on build systems, toolchains, and cross-platform development
+theme: jekyll-theme-minimal
+show_downloads: false
+google_analytics:
+plugins:
+  - jekyll-seo-tag
