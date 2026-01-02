@@ -1,0 +1,44 @@
+<!-- Mermaid Diagram Support -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  // Initialize Mermaid and convert code blocks
+  document.addEventListener("DOMContentLoaded", function() {
+    // Find all code blocks with mermaid class (from markdown ```mermaid)
+    document.querySelectorAll('pre > code.language-mermaid, code.language-mermaid').forEach(function(code) {
+      var pre = code.parentElement;
+      var div = document.createElement('div');
+      div.className = 'mermaid';
+      div.textContent = code.textContent;
+      pre.parentNode.replaceChild(div, pre);
+    });
+
+    // Also handle pre.mermaid if any
+    document.querySelectorAll('pre.mermaid').forEach(function(pre) {
+      var div = document.createElement('div');
+      div.className = 'mermaid';
+      div.textContent = pre.textContent;
+      pre.parentNode.replaceChild(div, pre);
+    });
+
+    // Initialize Mermaid
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose',
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis'
+      }
+    });
+  });
+</script>
+<style>
+  .mermaid {
+    text-align: center;
+    margin: 20px 0;
+    background: #fafafa;
+    padding: 15px;
+    border-radius: 8px;
+  }
+</style>
