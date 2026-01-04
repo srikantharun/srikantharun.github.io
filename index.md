@@ -6,6 +6,15 @@ Engineering insights on ML compilers, hardware simulation, and cross-platform to
 
 ## Posts
 
+### [GitLab CI/CD Components: Build Once, Use Everywhere](./gitlab-cicd-components)
+**A Practical Guide to Creating, Publishing, and Consuming Reusable Pipeline Components**
+
+How to build reusable CI/CD components, publish them to GitLab's CI/CD Catalog registry, and consume them across projects. Covers the complete workflow from development to versioned releases.
+
+[View Curated Components Repository](https://github.com/srikantharun/gitlab-curated-components)
+
+---
+
 ### [Functional Simulation for Multi-Tile AI Accelerators](./functional-simulation)
 **Bridging the Gap Between RTL and Silicon**
 
