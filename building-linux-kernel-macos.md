@@ -560,12 +560,12 @@ sequenceDiagram
 
 ```mermaid
 flowchart TB
-    subgraph "🍎 Linux on macOS - Summary"
-        A["🗂️ Case Sensitivity"]
-        B["📄 Missing Headers"]
-        C["🔧 GNU vs BSD Tools"]
-        D["🔗 Sandbox Symlinks"]
-        E["⚙️ Conditional Deps"]
+    subgraph Summary["Linux on macOS - Summary"]
+        A["Case Sensitivity"]
+        B["Missing Headers"]
+        C["GNU vs BSD Tools"]
+        D["Sandbox Symlinks"]
+        E["Conditional Deps"]
     end
 
     A --> A1["Bazel sandbox handles it"]
@@ -580,7 +580,7 @@ flowchart TB
     D --> D1["Darwin resolves differently"]
     D --> D2["Patch problematic paths"]
 
-    E --> E1["select() per platform"]
+    E --> E1["select per platform"]
     E --> E2["Skip elfutils on macOS"]
 ```
 
