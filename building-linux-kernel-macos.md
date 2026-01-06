@@ -559,23 +559,29 @@ sequenceDiagram
 ## Key Takeaways
 
 ```mermaid
-mindmap
-  root((Linux on macOS))
-    Case Sensitivity
-      Bazel sandbox handles it
-      Manual builds need APFS volume
-    Missing Headers
-      bee-headers provides elf.h
-      Inject via HOSTCFLAGS
-    GNU vs BSD Tools
-      Hermetic toolchains
-      PATH prepending
-    Sandbox Symlinks
-      Darwin resolves differently
-      Patch problematic paths
-    Conditional Deps
-      select() per platform
-      Skip elfutils on macOS
+flowchart TB
+    subgraph "🍎 Linux on macOS - Summary"
+        A["🗂️ Case Sensitivity"]
+        B["📄 Missing Headers"]
+        C["🔧 GNU vs BSD Tools"]
+        D["🔗 Sandbox Symlinks"]
+        E["⚙️ Conditional Deps"]
+    end
+
+    A --> A1["Bazel sandbox handles it"]
+    A --> A2["Manual builds need APFS volume"]
+
+    B --> B1["bee-headers provides elf.h"]
+    B --> B2["Inject via HOSTCFLAGS"]
+
+    C --> C1["Hermetic toolchains"]
+    C --> C2["PATH prepending"]
+
+    D --> D1["Darwin resolves differently"]
+    D --> D2["Patch problematic paths"]
+
+    E --> E1["select() per platform"]
+    E --> E2["Skip elfutils on macOS"]
 ```
 
 ---
