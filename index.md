@@ -13,6 +13,13 @@ Practical patterns for module extensions: conditional repository generation, cro
 
 ---
 
+### [Building the Linux Kernel on macOS with Bazel](./building-linux-kernel-macos)
+**Cross-Compilation Challenges, Sandbox Differences, and Hermetic Solutions**
+
+How to build the Linux kernel on macOS using Bazel's hermetic build system. Covers case-sensitivity issues, missing headers (elf.h, byteswap.h), GNU vs BSD tool differences, Darwin sandbox symlink resolution, and platform-conditional dependencies.
+
+---
+
 ### [GitLab CI/CD Components: Build Once, Use Everywhere](./gitlab-cicd-components)
 **A Practical Guide to Creating, Publishing, and Consuming Reusable Pipeline Components**
 
