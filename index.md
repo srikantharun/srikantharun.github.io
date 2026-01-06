@@ -6,6 +6,13 @@ Engineering insights on ML compilers, hardware simulation, and cross-platform to
 
 ## Posts
 
+### [Bazel Module Extensions: A Practical Guide](./bzlmod-extensions)
+**When and How to Use Module Extensions in Bzlmod (Bazel 7+/8+)**
+
+Practical patterns for module extensions: conditional repository generation, cross-module dependency aggregation, platform detection, lazy downloads, and code organization. With Mermaid diagrams and implementation examples.
+
+---
+
 ### [GitLab CI/CD Components: Build Once, Use Everywhere](./gitlab-cicd-components)
 **A Practical Guide to Creating, Publishing, and Consuming Reusable Pipeline Components**
 
