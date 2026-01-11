@@ -6,6 +6,20 @@ Engineering insights on ML compilers, hardware simulation, and cross-platform to
 
 ## Posts
 
+### [Bazel IDE Toolkit: Seamless C++ IntelliSense](./bazel-ide-toolkit)
+**Auto-refresh compile_commands.json for Bazel Projects**
+
+A VS Code extension that automatically keeps your compile_commands.json in sync with your Bazel build graph. Setup guide, configuration options, and tips for large monorepos.
+
+---
+
+### [VS Code vs CLion for Bazel C++ Monorepos](./ide-setup-bazel)
+**Choosing the Right IDE for Large-Scale C++ Development**
+
+Comparing VS Code (with clangd) and CLion (with Bazel plugin) for real-world Bazel development. Covers setup, compile_commands.json generation, performance tuning, and when to choose each IDE.
+
+---
+
 ### [Bazel Module Extensions: A Practical Guide](./bzlmod-extensions)
 **When and How to Use Module Extensions in Bzlmod (Bazel 7+/8+)**
 
