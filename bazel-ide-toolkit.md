@@ -5,8 +5,6 @@ date: 2026-01-11
 categories: [bazel, vscode, tooling]
 ---
 
-# Bazel IDE Toolkit: Complete Bazel IDE Experience for VS Code
-
 One of the biggest pain points for developers working with Bazel-based C++ projects is getting proper IDE support. Unlike CMake which generates `compile_commands.json` natively, Bazel requires additional tooling to enable features like code completion, go-to-definition, and real-time error checking.
 
 I've published **[Bazel IDE Toolkit](https://marketplace.visualstudio.com/items?itemName=srikantharun.bazel-ide-toolkit)** (now v0.3.0) - a VS Code extension that brings a complete Bazel development experience with auto-refresh, build/test/run commands, CodeLens, and more.
