@@ -1,15 +1,15 @@
 ---
 layout: post
-title: "Bazel IDE Toolkit: Seamless C++ IntelliSense for Bazel Projects"
-date: 2025-01-11
+title: "Bazel IDE Toolkit: Complete Bazel IDE Experience for VS Code"
+date: 2026-01-11
 categories: [bazel, vscode, tooling]
 ---
 
-# Bazel IDE Toolkit: Seamless C++ IntelliSense for Bazel Projects
+# Bazel IDE Toolkit: Complete Bazel IDE Experience for VS Code
 
 One of the biggest pain points for developers working with Bazel-based C++ projects is getting proper IDE support. Unlike CMake which generates `compile_commands.json` natively, Bazel requires additional tooling to enable features like code completion, go-to-definition, and real-time error checking.
 
-I've published **[Bazel IDE Toolkit](https://marketplace.visualstudio.com/items?itemName=srikantharun.bazel-ide-toolkit)** - a VS Code extension that automatically keeps your `compile_commands.json` in sync with your Bazel build graph.
+I've published **[Bazel IDE Toolkit](https://marketplace.visualstudio.com/items?itemName=srikantharun.bazel-ide-toolkit)** (now v0.3.0) - a VS Code extension that brings a complete Bazel development experience with auto-refresh, build/test/run commands, CodeLens, and more.
 
 ## The Problem
 
@@ -23,10 +23,23 @@ This happens because clangd (the language server) has no idea how Bazel organize
 
 ## The Solution
 
-The Bazel IDE Toolkit extension:
-1. **Watches** for changes to BUILD files, `.bzl` files, WORKSPACE, and MODULE.bazel
-2. **Automatically regenerates** `compile_commands.json` when changes are detected
-3. **Shows status** in the VS Code status bar so you know when refresh is happening
+The Bazel IDE Toolkit extension provides a complete Bazel development experience:
+
+**Core Features (v0.1.0)**
+- **Auto-refresh** `compile_commands.json` when BUILD files change
+- **File watching** for BUILD, .bzl, WORKSPACE, and MODULE.bazel
+- **Status bar** integration showing refresh status
+
+**Build/Run/Test Integration (v0.2.0)**
+- **Build/Run/Test commands** from the command palette
+- **Keyboard shortcuts** - `Cmd+Shift+B` to build, `Cmd+Shift+T` to test
+- **Target discovery** via `bazel query`
+
+**CodeLens & Starlark Support (v0.3.0)**
+- **CodeLens** - Clickable "Build", "Test", "Run" buttons above targets in BUILD files
+- **Starlark syntax highlighting** for BUILD, .bzl, WORKSPACE, MODULE.bazel
+- **Buildifier integration** - Auto-format on save
+- **Dependency visualization** - See what depends on what
 
 ## Setup Guide
 
@@ -115,6 +128,22 @@ Press `Cmd+Shift+P` (or `Ctrl+Shift+P` on Linux/Windows) and type "Bazel:" to se
 | `Bazel: Refresh compile_commands.json` | Manually trigger refresh |
 | `Bazel: Toggle Auto-Refresh` | Enable/disable automatic refresh |
 | `Bazel: Select Platform` | Choose target platform for cross-compilation |
+| `Bazel: Build Target` | Build a Bazel target |
+| `Bazel: Test Target` | Run tests for a target |
+| `Bazel: Run Target` | Run a binary target |
+| `Bazel: Build Current File's Target` | Build the target containing current file |
+| `Bazel: Test Current File` | Test the current file's target |
+| `Bazel: Format BUILD File (Buildifier)` | Format current BUILD file |
+| `Bazel: Show Dependencies` | Show what a target depends on |
+| `Bazel: Show Reverse Dependencies` | Show what depends on a target |
+
+### Keyboard Shortcuts
+
+| Shortcut | Command |
+|----------|---------|
+| `Cmd+Shift+B` / `Ctrl+Shift+B` | Build current file's target |
+| `Cmd+Shift+T` / `Ctrl+Shift+T` | Test current file |
+| `Alt+Shift+F` | Format BUILD file with Buildifier |
 
 ### Settings
 
@@ -125,8 +154,69 @@ Configure the extension in VS Code settings:
   "bazelIdeToolkit.autoRefresh": true,
   "bazelIdeToolkit.debounceMs": 2000,
   "bazelIdeToolkit.targets": "//...",
-  "bazelIdeToolkit.showStatusBar": true
+  "bazelIdeToolkit.showStatusBar": true,
+  "bazelIdeToolkit.enableCodeLens": true,
+  "bazelIdeToolkit.buildifierOnSave": true,
+  "bazelIdeToolkit.buildifierPath": "buildifier",
+  "bazelIdeToolkit.buildFlags": [],
+  "bazelIdeToolkit.testFlags": [],
+  "bazelIdeToolkit.runFlags": []
 }
+```
+
+### CodeLens
+
+When you open a BUILD file, you'll see clickable buttons above each target:
+
+```
+▶ Build  🧪 Test                    <- CodeLens buttons
+cc_test(
+    name = "my_test",
+    srcs = ["my_test.cc"],
+    deps = [":my_lib"],
+)
+```
+
+Click "Build" to build, "Test" to run tests, or "Run" for binary targets.
+
+### Buildifier Integration
+
+Install [Buildifier](https://github.com/bazelbuild/buildtools) for automatic formatting:
+
+```bash
+# macOS
+brew install buildifier
+
+# Linux
+go install github.com/bazelbuild/buildtools/buildifier@latest
+```
+
+BUILD files will auto-format on save, or use `Alt+Shift+F` to format manually.
+
+### Dependency Visualization
+
+Understand your build graph with dependency commands:
+
+**Show Dependencies** (`Bazel: Show Dependencies`)
+```
+Dependencies of //src:my_lib:
+
+  → //src:utils
+  → //lib:logging
+  → @abseil-cpp//absl/strings
+
+Total: 3 direct dependencies
+```
+
+**Show Reverse Dependencies** (`Bazel: Show Reverse Dependencies`)
+```
+What depends on //src:utils:
+
+  ← //src:my_lib
+  ← //src:my_binary
+  ← //tests:utils_test
+
+Total: 3 reverse dependencies
 ```
 
 ## How It Works
