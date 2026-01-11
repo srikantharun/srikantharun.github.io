@@ -164,18 +164,9 @@ Configure the extension in VS Code settings:
 
 ### CodeLens
 
-When you open a BUILD file, you'll see clickable buttons above each target:
+When you open a BUILD file, you'll see clickable buttons above each target. Click "Build" to build, "Test" to run tests, or "Run" for binary targets.
 
-```
-▶ Build  🧪 Test                    <- CodeLens buttons
-cc_test(
-    name = "my_test",
-    srcs = ["my_test.cc"],
-    deps = [":my_lib"],
-)
-```
-
-Click "Build" to build, "Test" to run tests, or "Run" for binary targets.
+![CodeLens in BUILD file](/assets/images/codelens.png)
 
 ### Buildifier Integration
 
