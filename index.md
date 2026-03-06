@@ -6,6 +6,13 @@ Engineering insights on ML compilers, hardware simulation, and cross-platform to
 
 ## Posts
 
+### [Building XCFrameworks for Gaming Applications](./xcframeworks-bazel-gaming)
+**Scaling iOS Modules with Bazel: rules_swift, Platform Patterns, and Cross-Platform CI**
+
+Patterns for integrating iOS-only XCFrameworks in cross-platform game codebases. Covers platform-conditional dependencies, target_compatible_with, objc_library for Objective-C++, and CI strategies for validating builds across iOS, macOS, Android, and more.
+
+---
+
 ### [Bazel IDE Toolkit: Seamless C++ IntelliSense](./bazel-ide-toolkit)
 **Auto-refresh compile_commands.json for Bazel Projects**
 
