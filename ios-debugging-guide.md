@@ -7,6 +7,8 @@ categories: [ios, debugging, lldb, bazel, xcode]
 
 **Understanding Apple's Debug Symbol Architecture, VSCode Integration, and Bazel Workflows**
 
+*by Srikanth Arunachalam*
+
 Debugging iOS applications presents unique challenges compared to Linux or Windows. Apple's "lazy" DWARF scheme, the distinction between dSYM bundles and N_OSO debug maps, and the lack of `--fission` support create a learning curve for developers coming from other platforms. This guide distills practical knowledge for debugging iOS simulator and device applications, with emphasis on Bazel-based build systems and VSCode integration.
 
 ---
@@ -123,8 +125,8 @@ code --install-extension nisargjhaveri.ios-debug
       "type": "ios",
       "request": "launch",
       "name": "iOS: Launch App",
-      "appPath": "${workspaceFolder}/bazel-bin/candycrushsaga_sim.app",
-      "bundleId": "com.midasplayer.test.candycrushsaga",
+      "appPath": "${workspaceFolder}/bazel-bin/MyGame_sim.app",
+      "bundleId": "com.example.mygame",
       "iosTarget": "simulator"
     }
   ]
@@ -183,27 +185,18 @@ Per [Yrom's debugging guide](https://yrom.net/blog/2023/04/22/debug-ios-app-in-v
 
 ## Bazel iOS Debugging Configuration
 
-### The `setup_msvc` Clarification
-
-**Important:** `bazel run //bz-tools:setup_msvc -- release live --clean --open` is **NOT for iOS**. This command generates Windows Visual Studio solutions and is completely irrelevant for Apple platform development.
-
-For iOS/macOS development in this codebase:
-- Use `bazel run //bz-tools:setup_vscode` for VSCode configuration
-- Use `xcodeproj` targets for Xcode project generation
-- iOS simulator: `bazel run //:install_ios_sim`
-
 ### Generating dSYM Files with rules_apple
 
 Per [rules_apple documentation](https://github.com/bazelbuild/rules_apple/blob/master/doc/common_info.md), enable dSYM generation:
 
 ```bash
 # Generate dSYM for top-level target
-bazel build //ios:candycrushsaga_sim \
+bazel build //ios:MyGame_sim \
   --apple_generate_dsym \
   --ios_multi_cpus=arm64
 
 # Generate dSYMs for all dependencies
-bazel build //ios:candycrushsaga_sim \
+bazel build //ios:MyGame_sim \
   --apple_generate_dsym \
   --output_groups=+dsyms
 ```
@@ -277,7 +270,7 @@ The codebase includes a Python symbolicator at `tools/scripts/Symbolicator/Symbo
 ```python
 # Usage pattern
 python Symbolicator.py \
-  --dsym candycrushsaga.app.dSYM.tar.gz \
+  --dsym MyGame.app.dSYM.tar.gz \
   --crash crash_report.txt \
   --output symbolicated_crash.txt
 ```
@@ -322,15 +315,15 @@ ios-deploy -d -b MyApp.app
 xcrun simctl boot "iPhone 15 Pro"
 
 # Install app
-xcrun simctl install booted ./bazel-bin/candycrushsaga_sim.app
+xcrun simctl install booted ./bazel-bin/MyGame_sim.app
 
 # Launch app
-xcrun simctl launch booted com.midasplayer.test.candycrushsaga
+xcrun simctl launch booted com.example.mygame
 
 # Attach LLDB
 lldb
 (lldb) platform select ios-simulator
-(lldb) process attach --name candycrushsaga --waitfor
+(lldb) process attach --name MyGame --waitfor
 ```
 
 ### Remote Debugging Setup
@@ -355,7 +348,7 @@ lldb
 
 ```bash
 # 1. Build with debug symbols
-bazel build //:candycrushsaga_sim \
+bazel build //:MyGame_sim \
   --config=ios-debug \
   --apple_generate_dsym
 
@@ -363,12 +356,12 @@ bazel build //:candycrushsaga_sim \
 bazel run //:install_ios_sim
 
 # 3. Launch simulator app
-xcrun simctl launch booted com.midasplayer.test.candycrushsaga
+xcrun simctl launch booted com.example.mygame
 
 # 4. Attach with LLDB
 lldb
-(lldb) process attach --name candycrushsaga
-(lldb) settings set target.source-map ./ /path/to/candycrushsaga/
+(lldb) process attach --name MyGame
+(lldb) settings set target.source-map ./ /path/to/MyGame/
 (lldb) breakpoint set --file GameScene.cpp --line 100
 (lldb) continue
 ```
@@ -377,14 +370,14 @@ lldb
 
 ```bash
 # 1. Extract dSYM from build artifacts
-tar -xzf candycrushsaga.app.dSYM.tar.gz
+tar -xzf MyGame.app.dSYM.tar.gz
 
 # 2. Verify UUID match
-dwarfdump --uuid candycrushsaga.app.dSYM
+dwarfdump --uuid MyGame.app.dSYM
 
 # 3. Symbolicate crash address
 atos -arch arm64 -i \
-  -o candycrushsaga.app.dSYM/Contents/Resources/DWARF/candycrushsaga \
+  -o MyGame.app.dSYM/Contents/Resources/DWARF/MyGame \
   -l 0x104a00000 \
   0x104a12345
 ```
@@ -411,7 +404,7 @@ atos -arch arm64 -i \
       "type": "lldb",
       "request": "attach",
       "name": "Attach iOS Simulator",
-      "program": "${workspaceFolder}/bazel-bin/candycrushsaga_sim.app/candycrushsaga",
+      "program": "${workspaceFolder}/bazel-bin/MyGame_sim.app/MyGame",
       "pid": "${command:pickProcess}",
       "sourceMap": {
         ".": "${workspaceFolder}"
@@ -481,7 +474,7 @@ Debugging iOS applications requires understanding Apple's unique debug symbol ar
 4. **VSCode is possible**: Extensions like vscode-ios-debug and SweetPad enable non-Xcode debugging
 5. **Command-line tools**: `ios-deploy`, `simctl`, and direct LLDB attachment work without Xcode UI
 
-The `setup_msvc` command is Windows-only and irrelevant for iOS development. For iOS debugging in Bazel projects, focus on proper dSYM generation and LLDB source mapping.
+For iOS debugging in Bazel projects, focus on proper dSYM generation and LLDB source mapping.
 
 ---
 
