@@ -6,6 +6,13 @@ Engineering insights on ML compilers, hardware simulation, and cross-platform to
 
 ## Posts
 
+### [iOS Debugging Deep Dive: Debug Symbols, IDE Setup, and Crash Troubleshooting](./ios-debugging-guide)
+**Understanding Apple's Debug Symbol Architecture, VSCode Integration, and Bazel Workflows**
+
+Comprehensive guide to iOS debugging covering Apple's "lazy" DWARF scheme, N_OSO debug maps vs dSYM bundles, why `--fission` is Linux-only, VSCode extensions for iOS simulator debugging (vscode-ios-debug, SweetPad, CodeLLDB), Bazel dSYM generation, and crash symbolication workflows.
+
+---
+
 ### [Building XCFrameworks for Gaming Applications](./xcframework-gaming)
 **Scaling iOS Modules with Bazel: rules_swift, Platform Patterns, and Cross-Platform CI**
 
