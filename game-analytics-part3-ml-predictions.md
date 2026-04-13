@@ -1,4 +1,9 @@
-# Game Analytics Part 3: ML-Powered Game Analytics
+---
+layout: post
+title: "Game Analytics Part 3: ML-Powered Game Analytics"
+date: 2026-04-13
+categories: [game-analytics, machine-learning, python, reinforcement-learning]
+---
 
 **Building AI Models for Level Difficulty Prediction, Player Behavior, and Automated Testing**
 

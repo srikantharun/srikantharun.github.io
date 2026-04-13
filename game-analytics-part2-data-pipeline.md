@@ -1,4 +1,9 @@
-# Game Analytics Part 2: Streaming Pipeline - Kafka to BigQuery
+---
+layout: post
+title: "Game Analytics Part 2: Streaming Pipeline - Kafka to BigQuery"
+date: 2026-04-13
+categories: [game-analytics, data-engineering, kafka, bigquery, airflow]
+---
 
 **Building a Scalable Data Pipeline with Kafka, Dataflow, BigQuery, and Airflow**
 

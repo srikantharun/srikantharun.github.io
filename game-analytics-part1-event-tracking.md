@@ -1,4 +1,9 @@
-# Game Analytics Part 1: Client-Side Event Tracking Architecture
+---
+layout: post
+title: "Game Analytics Part 1: Client-Side Event Tracking Architecture"
+date: 2026-04-13
+categories: [game-analytics, mobile, sdk, architecture]
+---
 
 **Building a Robust, Offline-Capable Event Collection System for Mobile Games**
 
