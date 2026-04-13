@@ -1,10 +1,33 @@
 # Technical Blog
 
-Engineering insights on ML compilers, hardware simulation, and cross-platform toolchains.
+Engineering insights on ML compilers, hardware simulation, cross-platform toolchains, and game analytics.
 
 ---
 
 ## Posts
+
+### Game Analytics Series
+
+#### [Part 1: Client-Side Event Tracking Architecture](./game-analytics-part1-event-tracking)
+**Building a Robust, Offline-Capable Event Collection System for Mobile Games**
+
+Deep dive into event tracking SDK architecture: SQLite persistence, batch sending with exponential backoff, JSON-RPC transport, and platform-specific considerations for iOS and Android.
+
+---
+
+#### [Part 2: Streaming Pipeline - Kafka to BigQuery](./game-analytics-part2-data-pipeline)
+**Building a Scalable Data Pipeline with Kafka, Dataflow, BigQuery, and Airflow**
+
+End-to-end data pipeline design: Kafka ingestion, Apache Beam stream processing, BigQuery schema design with partitioning/clustering, and Airflow DAG orchestration for daily ETL.
+
+---
+
+#### [Part 3: ML-Powered Game Analytics](./game-analytics-part3-ml-predictions)
+**Building AI Models for Level Difficulty Prediction, Player Behavior, and Automated Testing**
+
+Practical ML applications: difficulty prediction with gradient boosting, player churn prediction with XGBoost and SHAP explanations, and automated level testing with reinforcement learning agents.
+
+---
 
 ### [iOS Debugging Deep Dive: Debug Symbols, IDE Setup, and Crash Troubleshooting](./ios-debugging-guide)
 **Understanding Apple's Debug Symbol Architecture, VSCode Integration, and Bazel Workflows**
