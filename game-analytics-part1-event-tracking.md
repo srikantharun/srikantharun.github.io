@@ -598,6 +598,7 @@ Events are sent as JSON-RPC batch requests:
 
 Track SDK health with comprehensive metrics:
 
+{% raw %}
 ```cpp
 struct TrackingDiagnostics {
     // Event counts
@@ -650,6 +651,7 @@ struct TrackingDiagnostics {
     }
 };
 ```
+{% endraw %}
 
 ---
 

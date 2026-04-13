@@ -514,6 +514,7 @@ CLUSTER BY level_id;
 
 ### DAG Implementation
 
+{% raw %}
 ```python
 from airflow import DAG
 from airflow.operators.python import PythonOperator
@@ -729,6 +730,7 @@ with DAG(
         >> [trigger_ml_training, export_features]
     )
 ```
+{% endraw %}
 
 ---
 
