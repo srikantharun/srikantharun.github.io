@@ -1,6 +1,6 @@
 # Technical Blog
 
-Engineering insights on ML compilers, hardware simulation, cross-platform toolchains, and game analytics.
+Engineering insights on ML compilers, hardware simulation, cross-platform toolchains, game analytics, and production LLM systems.
 
 ---
 
@@ -26,6 +26,15 @@ End-to-end data pipeline design: Kafka ingestion, Apache Beam stream processing,
 **Building AI Models for Level Difficulty Prediction, Player Behavior, and Automated Testing**
 
 Practical ML applications: difficulty prediction with gradient boosting, player churn prediction with XGBoost and SHAP explanations, and automated level testing with reinforcement learning agents.
+
+---
+
+### AI & LLM Systems
+
+#### [Building an AI Code Review System: From Jenkins to Production](./ai-code-review-system)
+**A Practical Architecture for LLM-Powered Pull Request Analysis with Structured Evaluation**
+
+Nine-layer production architecture for AI code review: FastAPI/Typer API surface, versioned prompts with Pydantic schemas, model routing with fallbacks, guardrails for secrets/PII/prompt injection, parallel job orchestration, offline evaluation datasets, LLM-as-judge with rubric-driven scoring, observability with cost tracking, and feedback loops for continuous improvement. Includes real attack vectors and Jenkins/GitLab CI integration patterns.
 
 ---
 
@@ -124,5 +133,5 @@ Detailed patterns for cross-compiling with Bazel: sysroot management, platform d
 
 ## About
 
-These posts explore challenges in building ML infrastructure: from compilers that handle dynamic workloads to simulation environments that catch bugs before silicon.
+These posts explore challenges in building ML infrastructure: from compilers that handle dynamic workloads to simulation environments that catch bugs before silicon, to production LLM systems that need the same rigor as traditional software.
 
