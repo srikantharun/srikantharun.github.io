@@ -166,6 +166,7 @@ prompts/
 
 Each prompt file contains the template, input/output schemas, and metadata:
 
+{% raw %}
 ```yaml
 # prompts/risk/v1.1.0.yaml
 name: risk_assessment
@@ -270,6 +271,7 @@ template: |
 
   Respond with a JSON object matching the output schema.
 ```
+{% endraw %}
 
 The prompt loader validates inputs and outputs against the schemas:
 
@@ -1504,6 +1506,7 @@ For subjective qualities — "is this comment helpful?" — we use LLM-as-judge.
 
 The right pattern is rubric-driven, multi-criterion scoring:
 
+{% raw %}
 ```python
 # evaluation/judges.py
 from pydantic import BaseModel
@@ -1681,6 +1684,7 @@ async def check_mutation_kill(item: DatasetItem, output: ReviewOutput) -> CheckR
         message=f"Killed {result.killed}/{result.total} mutations ({kill_rate:.0%})",
     )
 ```
+{% endraw %}
 
 The key insight: deterministic checks (does it compile? does it kill mutants?) serve as ground truth. When the LLM judge disagrees with a deterministic check, we log it as a calibration signal and use it to refine the rubric.
 
