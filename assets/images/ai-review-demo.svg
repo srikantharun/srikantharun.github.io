@@ -1,0 +1,167 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 540" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14">
+  <!-- ============ Window chrome ============ -->
+  <defs>
+    <linearGradient id="titlebar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3a3a3a"/>
+      <stop offset="100%" stop-color="#2a2a2a"/>
+    </linearGradient>
+    <filter id="windowShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- Window background -->
+  <rect x="20" y="20" width="840" height="500" rx="10" fill="#1e1e1e" filter="url(#windowShadow)"/>
+
+  <!-- Title bar -->
+  <rect x="20" y="20" width="840" height="34" rx="10" fill="url(#titlebar)"/>
+  <rect x="20" y="44" width="840" height="10" fill="url(#titlebar)"/>
+
+  <!-- Traffic lights -->
+  <circle cx="42"  cy="37" r="6" fill="#ff5f57"/>
+  <circle cx="62"  cy="37" r="6" fill="#febc2e"/>
+  <circle cx="82"  cy="37" r="6" fill="#28c840"/>
+
+  <!-- Title -->
+  <text x="440" y="42" text-anchor="middle" fill="#bbb" font-size="13">ai-review — zsh — 88×24</text>
+
+  <!-- ============ Terminal text ============ -->
+  <!-- Helper: each line has an opacity animation that begins at a staggered time.
+       Whole animation runs 16s and loops. -->
+  <g fill="#e6e6e6">
+
+    <!-- Prompt + command (typing illusion via dur=1.2s width reveal) -->
+    <text x="40" y="90">
+      <tspan fill="#7ee787">srikanth@mbp</tspan><tspan fill="#a5a5a5">:</tspan><tspan fill="#79c0ff">~/code-review-system</tspan><tspan fill="#a5a5a5">$</tspan>
+    </text>
+
+    <!-- The typed command: appear character-by-character via clipPath width -->
+    <defs>
+      <clipPath id="typeClip">
+        <rect x="246" y="74" width="0" height="22">
+          <animate attributeName="width" from="0" to="560" begin="0.4s" dur="1.6s" fill="freeze"/>
+          <animate attributeName="width" from="560" to="560" begin="14s" dur="2s"/>
+          <animate attributeName="width" from="0" to="0" begin="16s" dur="0.01s" fill="freeze"/>
+        </rect>
+      </clipPath>
+    </defs>
+    <g clip-path="url(#typeClip)">
+      <text x="246" y="90" fill="#e6e6e6">ai-review review https://github.com/acme/payments/pull/482 --dry-run</text>
+    </g>
+
+    <!-- Blinking caret while typing -->
+    <rect x="246" y="78" width="8" height="14" fill="#e6e6e6">
+      <animate attributeName="x" values="246;806" keyTimes="0;1" dur="1.6s" begin="0.4s" fill="freeze"/>
+      <animate attributeName="opacity" values="1;0;1" dur="0.8s" repeatCount="indefinite"/>
+    </rect>
+
+    <!-- Output lines (staggered opacity) -->
+    <g opacity="0">
+      <text x="40" y="124" fill="#8b949e">→ Fetching PR #482 from acme/payments…</text>
+      <animate attributeName="opacity" from="0" to="1" begin="2.2s" dur="0.25s" fill="freeze"/>
+      <animate attributeName="opacity" from="1" to="0" begin="15.5s" dur="0.3s" fill="freeze"/>
+    </g>
+
+    <g opacity="0">
+      <text x="40" y="148" fill="#8b949e">→ 7 files changed · +312 −89 lines · touches: payments/, billing/</text>
+      <animate attributeName="opacity" from="0" to="1" begin="2.7s" dur="0.25s" fill="freeze"/>
+      <animate attributeName="opacity" from="1" to="0" begin="15.5s" dur="0.3s" fill="freeze"/>
+    </g>
+
+    <g opacity="0">
+      <text x="40" y="180" fill="#d2a8ff">[layer 4]</text>
+      <text x="125" y="180" fill="#e6e6e6">guardrails ✓  no secrets, no PII, no prompt injection</text>
+      <animate attributeName="opacity" from="0" to="1" begin="3.4s" dur="0.25s" fill="freeze"/>
+      <animate attributeName="opacity" from="1" to="0" begin="15.5s" dur="0.3s" fill="freeze"/>
+    </g>
+
+    <g opacity="0">
+      <text x="40" y="204" fill="#d2a8ff">[layer 3]</text>
+      <text x="125" y="204" fill="#e6e6e6">router → claude-sonnet-4 (primary) ✓</text>
+      <animate attributeName="opacity" from="0" to="1" begin="4.0s" dur="0.25s" fill="freeze"/>
+      <animate attributeName="opacity" from="1" to="0" begin="15.5s" dur="0.3s" fill="freeze"/>
+    </g>
+
+    <g opacity="0">
+      <text x="40" y="228" fill="#d2a8ff">[layer 5]</text>
+      <text x="125" y="228" fill="#e6e6e6">orchestrator · dispatching 3 jobs in parallel…</text>
+      <animate attributeName="opacity" from="0" to="1" begin="4.6s" dur="0.25s" fill="freeze"/>
+      <animate attributeName="opacity" from="1" to="0" begin="15.5s" dur="0.3s" fill="freeze"/>
+    </g>
+
+    <g opacity="0">
+      <text x="80" y="252" fill="#7ee787">  ✓ triage</text>
+      <text x="220" y="252" fill="#8b949e">(1.8s, 412 tok)</text>
+      <animate attributeName="opacity" from="0" to="1" begin="6.1s" dur="0.25s" fill="freeze"/>
+      <animate attributeName="opacity" from="1" to="0" begin="15.5s" dur="0.3s" fill="freeze"/>
+    </g>
+    <g opacity="0">
+      <text x="80" y="272" fill="#7ee787">  ✓ risk</text>
+      <text x="220" y="272" fill="#8b949e">(2.4s, 1,103 tok)</text>
+      <animate attributeName="opacity" from="0" to="1" begin="6.6s" dur="0.25s" fill="freeze"/>
+      <animate attributeName="opacity" from="1" to="0" begin="15.5s" dur="0.3s" fill="freeze"/>
+    </g>
+    <g opacity="0">
+      <text x="80" y="292" fill="#7ee787">  ✓ tests</text>
+      <text x="220" y="292" fill="#8b949e">(3.1s, 980 tok)</text>
+      <animate attributeName="opacity" from="0" to="1" begin="7.1s" dur="0.25s" fill="freeze"/>
+      <animate attributeName="opacity" from="1" to="0" begin="15.5s" dur="0.3s" fill="freeze"/>
+    </g>
+
+    <g opacity="0">
+      <text x="40" y="324" fill="#d2a8ff">[layer 7]</text>
+      <text x="125" y="324" fill="#e6e6e6">llm-as-judge · rubric score 8.6 / 10  · passed ✓</text>
+      <animate attributeName="opacity" from="0" to="1" begin="8.0s" dur="0.25s" fill="freeze"/>
+      <animate attributeName="opacity" from="1" to="0" begin="15.5s" dur="0.3s" fill="freeze"/>
+    </g>
+
+    <!-- Findings block -->
+    <g opacity="0">
+      <text x="40" y="356" fill="#f0883e" font-weight="bold">⚠ HIGH RISK</text>
+      <text x="170" y="356" fill="#e6e6e6">payments/charge.py:142  — currency conversion lacks rounding policy</text>
+      <animate attributeName="opacity" from="0" to="1" begin="8.8s" dur="0.3s" fill="freeze"/>
+      <animate attributeName="opacity" from="1" to="0" begin="15.5s" dur="0.3s" fill="freeze"/>
+    </g>
+    <g opacity="0">
+      <text x="40" y="376" fill="#3fb950" font-weight="bold">+ SUGGEST TEST</text>
+      <text x="170" y="376" fill="#e6e6e6">refund-flow error path (3 untested branches)</text>
+      <animate attributeName="opacity" from="0" to="1" begin="9.4s" dur="0.3s" fill="freeze"/>
+      <animate attributeName="opacity" from="1" to="0" begin="15.5s" dur="0.3s" fill="freeze"/>
+    </g>
+    <g opacity="0">
+      <text x="40" y="396" fill="#58a6ff" font-weight="bold">i  NOTE</text>
+      <text x="170" y="396" fill="#e6e6e6">billing/invoice.py duplicates logic in finance/ledger.py:88</text>
+      <animate attributeName="opacity" from="0" to="1" begin="10.0s" dur="0.3s" fill="freeze"/>
+      <animate attributeName="opacity" from="1" to="0" begin="15.5s" dur="0.3s" fill="freeze"/>
+    </g>
+
+    <!-- Summary line -->
+    <g opacity="0">
+      <text x="40" y="436" fill="#8b949e">─────────────────────────────────────────────────────────────────────────</text>
+      <animate attributeName="opacity" from="0" to="1" begin="10.8s" dur="0.25s" fill="freeze"/>
+      <animate attributeName="opacity" from="1" to="0" begin="15.5s" dur="0.3s" fill="freeze"/>
+    </g>
+    <g opacity="0">
+      <text x="40" y="460" fill="#e6e6e6">
+        Review complete · <tspan fill="#7ee787">2,495 tokens</tspan> · <tspan fill="#7ee787">$0.041</tspan> · <tspan fill="#7ee787">3.4s wall</tspan> · dry-run (not posted)
+      </text>
+      <animate attributeName="opacity" from="0" to="1" begin="11.2s" dur="0.3s" fill="freeze"/>
+      <animate attributeName="opacity" from="1" to="0" begin="15.5s" dur="0.3s" fill="freeze"/>
+    </g>
+
+    <!-- Next prompt -->
+    <g opacity="0">
+      <text x="40" y="490">
+        <tspan fill="#7ee787">srikanth@mbp</tspan><tspan fill="#a5a5a5">:</tspan><tspan fill="#79c0ff">~/code-review-system</tspan><tspan fill="#a5a5a5">$</tspan>
+      </text>
+      <rect x="246" y="478" width="8" height="14" fill="#e6e6e6">
+        <animate attributeName="opacity" values="1;0;1" dur="0.8s" repeatCount="indefinite"/>
+      </rect>
+      <animate attributeName="opacity" from="0" to="1" begin="12.0s" dur="0.25s" fill="freeze"/>
+      <animate attributeName="opacity" from="1" to="0" begin="15.5s" dur="0.3s" fill="freeze"/>
+    </g>
+  </g>
+
+  <!-- Loop indicator (small) -->
+  <text x="850" y="538" text-anchor="end" fill="#444" font-size="10">loops every 16s</text>
+</svg>

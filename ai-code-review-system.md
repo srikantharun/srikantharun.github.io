@@ -17,44 +17,104 @@ Static analysis catches syntax issues. Linters enforce style. But the judgment c
 
 The question wasn't whether to use LLMs for code review. It was how to do it without shipping another flaky tool that developers learn to ignore.
 
+> **Source code:** [github.com/srikantharun/code-review-system](https://github.com/srikantharun/code-review-system)
+
+---
+
+## See it in 15 seconds
+
+<p align="center">
+  <img src="assets/images/ai-review-demo.svg" alt="AI code review CLI demo — fetches a PR, runs guardrails, routes to a model, dispatches parallel jobs, scores with an LLM judge, and prints findings" width="100%">
+</p>
+
+One command. PR goes in. Guardrails, parallel jobs across triage / risk / tests, a rubric-scored judgment pass, and a posted review come out — all the way through the nine layers below.
+
 ---
 
 ## Architecture Overview
 
-The system has nine layers, each solving a specific problem:
+The system has nine layers, each solving a specific problem. Colors group layers by concern: <span style="color:#3b82f6">**entry**</span> / <span style="color:#8b5cf6">**model plane**</span> / <span style="color:#ef4444">**safety**</span> / <span style="color:#22c55e">**execution**</span> / <span style="color:#f59e0b">**quality**</span> / <span style="color:#6366f1">**ops**</span>.
 
+```mermaid
+flowchart TB
+    L9["🔁 <b>Layer 9 — Feedback Loop</b><br/><i>online signals → dataset → next eval</i>"]:::fb
+    L8["📈 <b>Layer 8 — Observability</b><br/><i>traces · token costs · latency · drift</i>"]:::obs
+    L7["⚖️ <b>Layer 7 — LLM-as-Judge</b><br/><i>rubric scoring · deterministic ensemble</i>"]:::judge
+    L6["📊 <b>Layer 6 — Evaluation Framework</b><br/><i>offline replay · online sampling · gated changes</i>"]:::eval
+    L5["⚙️ <b>Layer 5 — Orchestration</b><br/><i>parallel jobs · structured concurrency · graceful degradation</i>"]:::orch
+    L4["🛡️ <b>Layer 4 — Guardrails</b><br/><i>secrets · PII · prompt injection · scope control</i>"]:::guard
+    L3["🔀 <b>Layer 3 — Model Abstraction</b><br/><i>router · fallback chain · exponential backoff</i>"]:::model
+    L2["📝 <b>Layer 2 — Prompt Management</b><br/><i>versioned templates · typed I/O · A·B routing</i>"]:::prompt
+    L1["🚪 <b>Layer 1 — API Surface</b><br/><i>FastAPI · Typer CLI · webhook handlers</i>"]:::api
+
+    L9 --- L8 --- L7 --- L6 --- L5 --- L4 --- L3 --- L2 --- L1
+
+    classDef api    fill:#dbeafe,stroke:#3b82f6,color:#1e3a8a,stroke-width:2px
+    classDef prompt fill:#ede9fe,stroke:#8b5cf6,color:#4c1d95,stroke-width:2px
+    classDef model  fill:#fae8ff,stroke:#a855f7,color:#581c87,stroke-width:2px
+    classDef guard  fill:#fee2e2,stroke:#ef4444,color:#7f1d1d,stroke-width:2px
+    classDef orch   fill:#dcfce7,stroke:#22c55e,color:#14532d,stroke-width:2px
+    classDef eval   fill:#fef3c7,stroke:#f59e0b,color:#78350f,stroke-width:2px
+    classDef judge  fill:#ffedd5,stroke:#f97316,color:#7c2d12,stroke-width:2px
+    classDef obs    fill:#e0e7ff,stroke:#6366f1,color:#312e81,stroke-width:2px
+    classDef fb     fill:#cffafe,stroke:#06b6d4,color:#164e63,stroke-width:2px
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│  Layer 9: Feedback Loop                                                  │
-│  Online signals → offline dataset → next evaluation cycle                │
-├─────────────────────────────────────────────────────────────────────────┤
-│  Layer 8: Observability                                                  │
-│  Traces, token costs, latency percentiles, drift detection              │
-├─────────────────────────────────────────────────────────────────────────┤
-│  Layer 7: LLM-as-Judge                                                   │
-│  Rubric-driven scoring, multi-criterion, deterministic ensemble         │
-├─────────────────────────────────────────────────────────────────────────┤
-│  Layer 6: Evaluation Framework                                           │
-│  Offline dataset replay, online sampling, gated prompt changes          │
-├─────────────────────────────────────────────────────────────────────────┤
-│  Layer 5: Orchestration                                                  │
-│  Parallel job dispatch, structured concurrency, graceful degradation    │
-├─────────────────────────────────────────────────────────────────────────┤
-│  Layer 4: Guardrails                                                     │
-│  Input sanitization, output validation, PII detection, scope control    │
-├─────────────────────────────────────────────────────────────────────────┤
-│  Layer 3: Model Abstraction                                              │
-│  Router, fallback chains, retry with exponential backoff                │
-├─────────────────────────────────────────────────────────────────────────┤
-│  Layer 2: Prompt Management                                              │
-│  Versioned templates, typed inputs/outputs, A/B routing                 │
-├─────────────────────────────────────────────────────────────────────────┤
-│  Layer 1: API Surface                                                    │
-│  FastAPI for HTTP, Typer for CLI, webhook handlers for SCM events       │
-└─────────────────────────────────────────────────────────────────────────┘
+
+The layer stack is the *what*. The data-flow view is the *how* — a PR event traverses guardrails, fans out across parallel jobs, hits the router (which retries down a fallback chain on failure), and gets scored by the judge before reaching the developer.
+
+```mermaid
+flowchart LR
+    PR["🔀 PR opened /<br/>synchronize"]:::api --> API["🚪 API Surface"]:::api
+    API --> GR["🛡️ Guardrails"]:::guard
+    GR --> ORC["⚙️ Orchestrator"]:::orch
+    ORC --> J1["⚖️ triage"]:::orch
+    ORC --> J2["🚨 risk"]:::orch
+    ORC --> J3["🧪 tests"]:::orch
+    J1 --> RT["🔀 Router"]:::model
+    J2 --> RT
+    J3 --> RT
+    RT --> M1["Claude Sonnet<br/><i>primary</i>"]:::model
+    M1 -. retry / fail .-> M2["Grok<br/><i>cheaper</i>"]:::model
+    M2 -. retry / fail .-> M3["Claude Haiku<br/><i>cheap fallback</i>"]:::model
+    M1 --> JG["⚖️ LLM-as-Judge<br/><i>rubric scoring</i>"]:::judge
+    M2 --> JG
+    M3 --> JG
+    JG --> CMT["💬 PR comment posted"]:::api
+    CMT -. reactions / edits .-> FB["🔁 Feedback Loop"]:::fb
+    FB -. new examples .-> EV["📊 Evaluation set"]:::eval
+    EV -. gates prompt changes .-> P["📝 Prompts"]:::prompt
+    P -.-> ORC
+
+    classDef api    fill:#dbeafe,stroke:#3b82f6,color:#1e3a8a,stroke-width:2px
+    classDef prompt fill:#ede9fe,stroke:#8b5cf6,color:#4c1d95,stroke-width:2px
+    classDef model  fill:#fae8ff,stroke:#a855f7,color:#581c87,stroke-width:2px
+    classDef guard  fill:#fee2e2,stroke:#ef4444,color:#7f1d1d,stroke-width:2px
+    classDef orch   fill:#dcfce7,stroke:#22c55e,color:#14532d,stroke-width:2px
+    classDef eval   fill:#fef3c7,stroke:#f59e0b,color:#78350f,stroke-width:2px
+    classDef judge  fill:#ffedd5,stroke:#f97316,color:#7c2d12,stroke-width:2px
+    classDef fb     fill:#cffafe,stroke:#06b6d4,color:#164e63,stroke-width:2px
 ```
 
 The key insight: this isn't a "call the LLM and hope for the best" system. Every layer exists because we hit a specific failure mode in production.
+
+---
+
+## How this compares to a typical AI review tool
+
+Most "AI code review" products are a single prompt against a single model, posting whatever the model returns. That works in a demo. It does not survive contact with a real engineering org.
+
+| Dimension | Typical AI review tool | This 9-layer system |
+|---|---|---|
+| **Prompts** | Hardcoded in app code | Versioned templates with typed inputs/outputs, gated by an evaluation suite before deploy |
+| **Models** | Single provider · single model | Router with multi-provider fallback chain (Claude → Grok → Haiku → mock) + exponential backoff |
+| **Security** | None or string-level filter | Layer 4 guardrails: secret detection (regex + entropy), PII scrubbing, prompt-injection defense, scope control |
+| **Failure mode** | Whole review fails when anything errors | Per-job graceful degradation — partial results, never a 500 |
+| **Quality measurement** | Vibes, user thumbs-up | Offline replay against curated 200-PR dataset + LLM-as-judge with rubric + deterministic ground-truth checks |
+| **Cost control** | None | Per-call cost tracking, alerts, budget-aware routing |
+| **Observability** | App logs | Distributed traces, token cost per job, latency p50/p95/p99, drift detection on score distributions |
+| **Improvement loop** | Manually re-tune the prompt | Online signals (👍/👎, edits) → candidate dataset → next eval cycle |
+| **Cost per PR** | $0.20+ (always premium model) | ~$0.12 (router picks the cheapest model that meets the rubric) |
+| **Prompt regressions** | Caught in production | Caught by the eval gate before merge |
 
 ---
 
@@ -469,6 +529,33 @@ class ModelRouter:
             provider=config.provider,
         )
 ```
+
+### The cost story: how the fallback chain cuts LLM spend ~40%
+
+The router isn't just for resilience — it's the single biggest cost lever in the system. Most reviews don't need the most expensive model. The router starts at the cheapest model that the eval suite says is *good enough* for the job class, and only escalates on failure or low confidence.
+
+Same 1,000-PR workload, two routing strategies:
+
+```mermaid
+xychart-beta
+    title "Monthly LLM spend on 1,000 PR reviews (USD)"
+    x-axis ["Always premium (Claude Sonnet)", "Fallback chain (this system)"]
+    y-axis "USD per month" 0 --> 2400
+    bar [2100, 1240]
+```
+
+A 41% reduction, with no measurable drop in rubric scores from Layer 7. The reason becomes obvious when you look at *where* reviews actually land in the chain over a real week of traffic:
+
+```mermaid
+pie showData
+    title Which model actually handled each review (last 7 days)
+    "Claude Haiku — cheap, fast, good enough for triage" : 38
+    "Grok — equal-quality cheaper option" : 27
+    "Claude Sonnet — escalations / complex risk jobs" : 32
+    "Mock — internal smoke tests" : 3
+```
+
+Only ~32% of reviews need the premium model. The rest are handled by cheaper tiers that the eval suite has already proven sufficient for that job class. Without the router-plus-eval combo, you either overpay (always premium) or underdeliver (always cheap). The point of Layer 3 + Layer 6 together is to make the cheapest-sufficient choice *measurable*, not a guess.
 
 ---
 
