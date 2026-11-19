@@ -6,6 +6,13 @@ Engineering insights on ML compilers, hardware simulation, cross-platform toolch
 
 ## Posts
 
+### [Hosting a Meta Vision LLM on an AMD MI300X with vLLM](./llama-vision-mi300x-vllm)
+**Self-hosting a vision-language model on AMD Instinct for AI-assisted WebXR game testing — the Llama 3.2 Vision (mllama) wall, the Qwen2.5-VL pivot, MI300X timings, and a capture→feedback→verify→continue test pipeline.**
+
+How I served a vision LLM on a single MI300X with vLLM, diagnosed why Llama 3.2 Vision will not load on current ROCm images, pivoted to Qwen2.5-VL, and built a loop where the model proposes tests and a deterministic oracle keeps only the verified ones.
+
+---
+
 ### Game Analytics Series
 
 #### [Part 1: Client-Side Event Tracking Architecture](./game-analytics-part1-event-tracking)
